@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/products', productsRoute);
+app.use('/products', productsRoute);
 
 app.use(errorMiddleware);
 
