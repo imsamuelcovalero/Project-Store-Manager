@@ -1,24 +1,43 @@
-// const CustomError = require('../errors/CustomError');
-// const NotFoundError = require('../errors/NotFoundError');
+const CustomError = require('../errors/CustomError');
 const SalesModel = require('../models/Sales');
+const ProductsModel = require('../models/Products');
 
 const salesService = {
-  // getProductById: async (id) => {
-  //   const result = await ProductsModel.getByPk(id);
-  //   if (!result) {
-  //     return false;
-  //   }
-  //   return result;
-  // },
+  getSaleById: async (id) => {
+    const result = await SalesModel.getByPk(id);
+    if (!result) {
+      throw new CustomError(404, 'Sale not found');
+    }
 
-  // getAll: async () => {
-  //   const data = await ProductsModel.getAll();
-  //   return data;
-  // },
-
-  create: async (quantity) => {
-    const result = await SalesModel.create(quantity);
     return result;
+  },
+
+  getAll: async () => {
+    const data = await SalesModel.getAll();
+
+    return data;
+  },
+
+  create: async (itemsSold) => {
+    const verifyArray = [];
+    const verifyProductId = await Promise.all(
+        itemsSold.map(({ productId }) => ProductsModel
+          .getByPk(productId)),
+    );
+    verifyProductId.forEach((item) => {
+      if (item === undefined) verifyArray.push(item);
+    });
+
+    if (verifyArray.length > 0) {
+      throw new CustomError(404, 'Product not found');
+    }
+      const { id } = await SalesModel.createSale();
+      const sales = await Promise.all(
+        itemsSold.map(({ productId, quantity }) => SalesModel
+          .insertSalesProducts({ id, productId, quantity })),
+      );
+      const newSale = { id, itemsSold: sales };
+      return newSale;
   },
 };
 
