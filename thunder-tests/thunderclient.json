@@ -4,13 +4,18 @@
     "colId": "c17b5666-7fc7-49f2-9a16-12d46200f44f",
     "containerId": "",
     "name": "projeto",
-    "url": "http://localhost:3000/products/999",
-    "method": "GET",
+    "url": "http://localhost:3000/products/",
+    "method": "POST",
     "sortNum": 10000,
     "created": "2022-08-11T18:46:53.021Z",
-    "modified": "2022-08-11T20:35:29.561Z",
+    "modified": "2022-08-12T13:54:07.670Z",
     "headers": [],
     "params": [],
+    "body": {
+      "type": "json",
+      "raw": "  {\n    \"name\": \"Xabl\"\n  }",
+      "form": []
+    },
     "tests": []
   }
 ]

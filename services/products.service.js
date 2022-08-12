@@ -1,12 +1,12 @@
-// const CustomError = require('../errors/CustomError');
-const NotFoundError = require('../errors/NotFoundError');
+// const NotFoundError = require('../errors/NotFoundError');
+const CustomError = require('../errors/CustomError');
 const ProductsModel = require('../models/Products');
 
 const productsService = {
   getProductById: async (id) => {
     const result = await ProductsModel.getByPk(id);
     if (!result) {
-      return false;
+      throw new CustomError(404, 'Product not found');
     }
     return result;
   },
@@ -14,6 +14,11 @@ const productsService = {
   getAll: async () => {
     const data = await ProductsModel.getAll();
     return data;
+  },
+
+  create: async (newProductName) => {
+    const result = await ProductsModel.create(newProductName);
+    return result;
   },
 };
 

@@ -1,14 +1,17 @@
 require('dotenv').config();
-require('express-async-errors');
 const express = require('express');
-const productsRoute = require('./routes/products.route');
+require('express-async-errors');
 const errorMiddleware = require('./middlewares/error.middleware');
+
+const productsRoute = require('./routes/products.route');
+const salesRoute = require('./routes/sales.route');
 
 const app = express();
 
 app.use(express.json());
 
 app.use('/products', productsRoute);
+app.use('/sales', salesRoute);
 
 app.use(errorMiddleware);
 
