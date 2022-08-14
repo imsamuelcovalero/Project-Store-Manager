@@ -14,8 +14,9 @@ const salesService = {
 
   getAll: async () => {
     const data = await SalesModel.getAll();
-
-    return data;
+    const sales = [{ ...data }];
+    console.log('sales', sales);
+    return sales;
   },
 
   create: async (itemsSold) => {
@@ -31,13 +32,14 @@ const salesService = {
     if (verifyArray.length > 0) {
       throw new CustomError(404, 'Product not found');
     }
-      const { id } = await SalesModel.createSale();
-      const sales = await Promise.all(
-        itemsSold.map(({ productId, quantity }) => SalesModel
-          .insertSalesProducts({ id, productId, quantity })),
-      );
-      const newSale = { id, itemsSold: sales };
-      return newSale;
+
+    const { id } = await SalesModel.createSale();
+    const sales = await Promise.all(
+      itemsSold.map(({ productId, quantity }) => SalesModel
+        .insertSalesProducts({ id, productId, quantity })),
+    );
+    const newSale = { id, itemsSold: sales };
+    return newSale;
   },
 };
 

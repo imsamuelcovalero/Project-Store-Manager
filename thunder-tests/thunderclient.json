@@ -5,10 +5,10 @@
     "containerId": "",
     "name": "projeto",
     "url": "http://localhost:3000/sales/",
-    "method": "POST",
+    "method": "GET",
     "sortNum": 10000,
     "created": "2022-08-11T18:46:53.021Z",
-    "modified": "2022-08-12T23:05:50.106Z",
+    "modified": "2022-08-13T01:14:05.984Z",
     "headers": [],
     "params": [],
     "body": {

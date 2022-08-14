@@ -124,3 +124,52 @@ describe('Busca todas os produtos no BD', () => {
     });
   });
 });
+
+// describe('Cria um produto no BD', () => { 
+//   describe('quando o produto é criado', () => {
+//     const response = {};
+//     const request = {};
+//     before(() => {
+//       response.status = sinon.stub().returns(response);
+//       response.json = sinon.stub().returns();
+//       sinon.stub(productsService, 'create').resolves({ id: 1, name: 'Martelo de Thor' });
+//     }).after(() => {
+//       productsService.create.restore();
+//     }
+//     );
+//     it('o status seja 201', async () => {
+//       await productsController.create(request, response);
+//       expect(response.status.calledWith(201)).to.be.equal(true);
+//     }
+//     );
+//     it('o objeto com os dados', async () => {
+//       await productsController.create(request, response);
+//       expect(response.json.calledWith({ id: 1, name: 'Martelo de Thor' })).to.be.equal(true);
+//     }
+//     );
+//   }
+//   );
+//   describe('quando o produto não é criado', () => {
+//     const response = {};
+//     const request = {};
+//     before(() => {
+//       response.status = sinon.stub().returns(response);
+//       response.json = sinon.stub().returns();
+//       sinon.stub(productsService, 'create').resolves(false);
+//     }).after(() => {
+//       productsService.create.restore();
+//     }
+//     );
+//     it('o status seja 400', async () => {
+//       await productsController.create(request, response);
+//       expect(response.status.calledWith(400)).to.be.equal(true);
+//     }
+//     );
+//     it('o objeto com a mensagem', async () => {
+//       await productsController.create(request, response);
+//       expect(response.json.calledWith({ message: 'Product not created' })).to.be.equal(true);
+//     }
+//     );
+//   }
+//   );
+// });

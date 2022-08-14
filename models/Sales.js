@@ -13,9 +13,17 @@ const Sales = {
   },
 
   getAll: async () => {
-    const [result] = await connection.query('SELECT * from StoreManager.sales');
-    // console.log('result', result);
-    return result;
+    const [result] = await connection.query(`
+    SELECT * from StoreManager.sales
+    LEFT JOIN StoreManager.sales_products
+    ON StoreManager.sales.id = StoreManager.sales_products.sale_id`);
+    console.log('result', result);
+    return {
+      saleId: result.sale_id,
+      date: result.date,
+      productId: result.product_id,
+      quantity: result.quantity,
+    };
   },
 
   createSale: async () => {
