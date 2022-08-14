@@ -2,28 +2,25 @@ const connection = require('./connection');
 
 const Sales = {
   getByPk: async (id) => {
-    const [[result]] = await connection.query(`
-      SELECT * from StoreManager.sales
-      WHERE id = ?
-      LEFT JOIN StoreManager.sales_products
-      ON StoreManager.sales.id = StoreManager.sales_products.sale_id
-      ORDER BY StoreManager.sales.id ASC, StoreManager.sales_products.id ASC;
+    const [result] = await connection.query(`
+    SELECT s.date AS date, sp.product_id AS productId, sp.quantity AS quantity
+    FROM StoreManager.sales_products as sp
+    LEFT JOIN StoreManager.sales as s
+    ON sp.sale_id = s.id
+    WHERE sp.sale_id = ?
+    ORDER BY productId
     `, [id]);
     return result;
   },
 
   getAll: async () => {
     const [result] = await connection.query(`
-    SELECT * from StoreManager.sales
-    LEFT JOIN StoreManager.sales_products
-    ON StoreManager.sales.id = StoreManager.sales_products.sale_id`);
-    console.log('result', result);
-    return {
-      saleId: result.sale_id,
-      date: result.date,
-      productId: result.product_id,
-      quantity: result.quantity,
-    };
+    SELECT sp.sale_id AS saleId, s.date AS date, sp.product_id AS productId, sp.quantity AS quantity
+    FROM StoreManager.sales_products as sp
+    LEFT JOIN StoreManager.sales as s
+    ON sp.sale_id = s.id
+    ORDER BY saleId ASC, productId ASC`); 
+    return result;
   },
 
   createSale: async () => {

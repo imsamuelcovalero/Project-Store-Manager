@@ -5,7 +5,7 @@ const ProductsModel = require('../models/Products');
 const salesService = {
   getSaleById: async (id) => {
     const result = await SalesModel.getByPk(id);
-    if (!result) {
+    if (result.length === 0) {
       throw new CustomError(404, 'Sale not found');
     }
 
@@ -13,9 +13,7 @@ const salesService = {
   },
 
   getAll: async () => {
-    const data = await SalesModel.getAll();
-    const sales = [{ ...data }];
-    console.log('sales', sales);
+    const sales = await SalesModel.getAll();
     return sales;
   },
 
