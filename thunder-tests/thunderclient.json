@@ -4,13 +4,18 @@
     "colId": "c17b5666-7fc7-49f2-9a16-12d46200f44f",
     "containerId": "",
     "name": "projeto",
-    "url": "http://localhost:3000/sales/99",
-    "method": "GET",
+    "url": "http://localhost:3000/sales/",
+    "method": "POST",
     "sortNum": 10000,
     "created": "2022-08-11T18:46:53.021Z",
-    "modified": "2022-08-14T15:40:12.997Z",
+    "modified": "2022-08-15T22:05:33.911Z",
     "headers": [],
     "params": [],
+    "body": {
+      "type": "json",
+      "raw": "[\n    {\n      \"productId\": 10,\n      \"quantity\":1\n    },\n    {\n      \"productId\": 1,\n      \"quantity\":5\n    }\n  ]",
+      "form": []
+    },
     "tests": []
   }
 ]

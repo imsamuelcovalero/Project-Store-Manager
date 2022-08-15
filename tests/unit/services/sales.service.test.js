@@ -1,11 +1,14 @@
-const { expect } = require('chai');
-const { describe } = require('mocha');
-// const CustomError = require('../../../errors/CustomError');
+const { expect, use } = require('chai');
+const { describe, beforeEach } = require('mocha');
+const chai = require('chai-as-promised');
 const sinon = require('sinon');
 const connection = require('../../../models/connection');
 
 const salesService = require('../../../services/sales.service');
 const Sales = require('../../../models/Sales');
+const Products = require('../../../models/Products');
+const verify = require('../../../helpers/verify');
+use(chai);
 
 describe('Service - Busca apenas uma venda no BD por seu ID', () => {
   beforeEach(() => { 
@@ -126,31 +129,52 @@ describe('Service - Busca todas as vendas no BD', () => {
   });
 });
   
-// describe('Service - Cria um novo produto no BD', () => {
-//   const newProductName = 'ProdutoX';
-//   before(() => {
-//     sinon.stub(Products, 'create')
-//       .resolves(
-//         {
-//           "id": 4,
-//           "name": "ProdutoX"
-//         }
-//       );
-//   });
-//   after(() => {
-//     Products.create.restore();
-//   });
-//   it('retorna um objeto', async () => {
-//     const response = await  productsService.create(newProductName);
+describe('Service - Cria uma nova venda no BD', () => {
+  beforeEach(() => { 
+    sinon.restore();
+  })
+  describe('quando não existe um produto com o ID informado', () => {
+    it('encerra a requisição retornando o erro', async () => {
+      sinon.stub(verify, 'verifyProducts').resolves(false);
 
-//     expect(response).to.be.an('object');
-//   });
-//   it('o objeto não está vazio', async () => {
-//     const response = await  productsService.create(newProductName);
-//     expect(response).to.be.not.empty;
-//   });
-//   it('tal objeto possui as propriedades: "id", "name"', async () => {
-//     const item = await Products.create();
-//     expect(item).to.include.all.keys('id', 'name');
-//   });
-// });
+      return expect(salesService.create()).to.eventually.be.rejectedWith(Error, 'Product not found');
+    });
+  });
+  describe('quanto é criada uma nova venda', () => { 
+    const newSale = {
+      "id": 3,
+      "itemsSold": [
+        {
+          "productId": 1,
+          "quantity":1
+        },
+        {
+          "productId": 2,
+          "quantity":5
+        }
+      ]
+    }
+    it('retorna um objeto', async () => { 
+      sinon.stub(Sales, 'createSale').resolves(newSale.id);
+      sinon.stub(Sales, 'insertSalesProducts').resolves(newSale.itemsSold);
+      const response = await salesService.create(newSale.itemsSold);
+      console.log('response', response);
+
+      expect(response).to.be.an('object');
+    })
+    it('o objeto não está vazio', async () => {
+      sinon.stub(Sales, 'createSale').resolves(newSale.id);
+      sinon.stub(Sales, 'insertSalesProducts').resolves(newSale.itemsSold);
+      const response = await salesService.create(newSale.itemsSold);
+
+      expect(response).to.be.not.empty;
+    })
+    it('o objeto possui as propriedades: "id", "itemsSold"', async () => {
+      sinon.stub(Sales, 'createSale').resolves(newSale.id);
+      sinon.stub(Sales, 'insertSalesProducts').resolves(newSale.itemsSold);
+      const item = await salesService.create(newSale.itemsSold);
+
+      expect(item).to.include.all.keys('id', 'itemsSold');
+    })
+  });
+});

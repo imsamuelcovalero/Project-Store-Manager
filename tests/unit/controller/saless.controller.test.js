@@ -97,41 +97,70 @@ describe('Controller - Busca todas as vendas no BD', () => {
   });
 });
 
-// describe('Controller - Quando insere um produto no banco de dados', async () => {
-//   const newProductName = 'ProdutoX';
-//   const response = {};
-//   const request = {};
+// describe('quando é criada uma nova venda no banco de dados', async () => {
+//     const response = {};
+//     const request = {};
 
-//   before(() => {
-//     request.body = {
-//       name: newProductName,
-//     };
+//     before(() => {
+//       request.body = [
+//         {
+//           "productId": 1,
+//           "quantity":1
+//         },
+//         {
+//           "productId": 2,
+//           "quantity":5
+//         }
+//       ];
 
-//     response.status = sinon.stub()
-//       .returns(response);
-//     response.json = sinon.stub()
-//       .returns();
+//       response.status = sinon.stub()
+//         .returns(response);
+//       response.json = sinon.stub()
+//         .returns();
 
-//     sinon.stub(productsService, 'create')
-//       .resolves({
-//           "id": 4,
-//           "name": "ProdutoX"
-//       });
-//   });
+//       sinon.stub(salesService, 'create')
+//         .resolves({
+//           "id": 3,
+//           "itemsSold": [
+//             {
+//               "productId": 1,
+//               "quantity":1
+//             },
+//             {
+//               "productId": 2,
+//               "quantity":5
+//             }
+//           ]
+//         });
+//     });
 
-//   after(() => {
-//     productsService.create.restore();
-//   });
+//     after(() => {
+//       salesService.create.restore();
+//     });
 
-//   it('é chamado o método "status" passando o código 201', async () => {
-//     await productsController.create(request, response);
+//     it('é chamado o método "status" passando o código 201', async () => {
+//       await salesController.getSaleById(request, response);
+//       expect(response.status.calledWith(201)).to.be.equal(true);
+//     });
 
-//     expect(response.status.calledWith(201)).to.be.equal(true);
-//   });
-
-//   it('é chamado o método "json" passando um objeto', async () => {
-//     await productsController.create(request, response);
-
-//     expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
-//   });
+//     it('é chamado o método "json" passando um objeto', async () => {
+//       await salesController.getSaleById(request, response);
+//       expect(response.json.calledWith(sinon.match.object)).to.be.deep.equal(true);
+//     });
+//     it('o objeto com os dados', async function () {
+//       await salesController.getAll(request, response);
+//       expect(response.json.calledWith([[{
+//           "id": 3,
+//           "itemsSold": [
+//             {
+//               "productId": 1,
+//               "quantity":1
+//             },
+//             {
+//               "productId": 2,
+//               "quantity":5
+//             }
+//           ]
+//         }], []])).to.be.equal(true);
+//     });
 // });

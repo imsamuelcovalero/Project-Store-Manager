@@ -123,33 +123,69 @@ describe('Model - Busca todas as vendas no BD', () => {
   });
 });
 
-// describe('Model - Cria uma nova venda no BD', () => {
-//   const newProductName = 'ProdutoX';
-//   before(() => {
-//     sinon.stub(Products, 'create')
-//       .resolves(
-//         {
-//           "id": 4,
-//           "name": "ProdutoX"
-//         }
-//       );
-//   });
-//   after(() => {
-//     Products.create.restore();
-//   });
-//   it('retorna um objeto', async () => {
-//     const response = await  Products.create(newProductName);
+describe('Model - Cria uma venda no BD', () => {
+  describe('quanto é criada uma nova venda', () => {
+    beforeEach(() => { 
+      sinon.restore();
+      })
+      
+      const answerObj = {
+        "insertId": 4,
+      }
 
-//     expect(response).to.be.an('object');
-//   });
-//   it('o objeto não está vazio', async () => {
-//     const response = await Products.create(newProductName);
+      it('retorna um objeto', async () => {
+        sinon.stub(connection, 'query').resolves([answerObj]);
+        const response = await  Sales.createSale();
+
+        expect(response).to.be.an('object');
+      });
+      it('o objeto não está vazio', async () => {
+        sinon.stub(connection, 'query').resolves([answerObj]);
+        const response = await Sales.createSale();
+        
+        expect(response).to.be.not.empty;
+      });
+      it('tal objeto possui as propriedades: "id", "name"', async () => {
+        sinon.stub(connection, 'query').resolves([answerObj]);
+        const item = await Sales.createSale();
+        
+        expect(item).to.include.all.keys('id');
+      });
+  });
+  
+  describe('quanto são inseridos os produtos vendidos', () => {
+    beforeEach(() => { 
+      sinon.restore();
+      })
     
-//     expect(response).to.be.not.empty;
-//   });
-//   it('tal objeto possui as propriedades: "id", "name"', async () => {
-//     const item = await Products.create();
+    const newsale = {
+      "id": 4,
+      "productId": 1,
+      "quantity":1
+    }
     
-//     expect(item).to.include.all.keys('id', 'name');
-//   });
-// });
+    const answerObj = {
+      "productId": 1,
+      "quantity":1
+    }
+
+      it('retorna um objeto', async () => {
+        sinon.stub(connection, 'query').resolves([answerObj]);
+        const response = await  Sales.insertSalesProducts(newsale);
+
+        expect(response).to.be.an('object');
+      });
+      it('o objeto não está vazio', async () => {
+        sinon.stub(connection, 'query').resolves([answerObj]);
+        const response = await Sales.insertSalesProducts(newsale);
+        
+        expect(response).to.be.not.empty;
+      });
+      it('tal objeto possui as propriedades: "productId", "quantity"', async () => {
+        sinon.stub(connection, 'query').resolves([answerObj]);
+        const item = await Sales.insertSalesProducts(newsale);
+        
+        expect(item).to.include.all.keys('productId', 'quantity');
+      });
+    });
+});

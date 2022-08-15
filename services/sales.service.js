@@ -1,6 +1,7 @@
 const CustomError = require('../errors/CustomError');
 const SalesModel = require('../models/Sales');
 const ProductsModel = require('../models/Products');
+const { verifyProduct } = require('../helpers/verify');
 
 const salesService = {
   getSaleById: async (id) => {
@@ -16,21 +17,14 @@ const salesService = {
     const sales = await SalesModel.getAll();
     return sales;
   },
-
+  
   create: async (itemsSold) => {
-    const verifyArray = [];
-    const verifyProductId = await Promise.all(
-        itemsSold.map(({ productId }) => ProductsModel
-          .getByPk(productId)),
-    );
-    verifyProductId.forEach((item) => {
-      if (item === undefined) verifyArray.push(item);
-    });
-
-    if (verifyArray.length > 0) {
+    const allSales = await ProductsModel.getAll();
+    const verifyIfProductExists = verifyProduct(itemsSold, allSales);
+    if (verifyIfProductExists === false) {
       throw new CustomError(404, 'Product not found');
     }
-
+    
     const { id } = await SalesModel.createSale();
     const sales = await Promise.all(
       itemsSold.map(({ productId, quantity }) => SalesModel
