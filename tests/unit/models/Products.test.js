@@ -5,7 +5,7 @@ const connection = require('../../../models/connection');
 
 const Products = require('../../../models/Products');
 
-describe('Busca apenas um produto no BD por seu ID', () => {
+describe('Model -  Busca apenas um produto no BD por seu ID', () => {
   before(async () => {
     const query = [[]];
     sinon.stub(connection, 'query').resolves(query);
@@ -48,7 +48,7 @@ describe('Busca apenas um produto no BD por seu ID', () => {
   });
 });
 
-describe('Busca todos os produtos no BD', () => {
+describe('Model - Busca todos os produtos no BD', () => {
   describe('quando não existe nenhum produto criado', () => {
     before(function () {
       const resultadoQuery = [[], []];
@@ -69,7 +69,7 @@ describe('Busca todos os produtos no BD', () => {
   describe('quando exitem produtos criados', () => {
     before(function () {
       const resultadoQuery = [[{ id: 1, name: 'Martelo de Thor'}], []];
-      sinon.stub(connection, 'execute').resolves(resultadoQuery);
+      sinon.stub(connection, 'query').resolves(resultadoQuery);
     });
     it('retorne um array', async function () {
       const resultado = await Products.getAll();
@@ -91,32 +91,33 @@ describe('Busca todos os produtos no BD', () => {
   });
 });
 
-// describe('Cria um novo produto no BD', () => {
-//   describe('quando não for passado um nome', () => {
-//     it('retorna um erro', async () => {
-//       const result = await Products.create();
-//       expect(result).to.be.an('error');
-//     }).timeout(1000);
-//   }).timeout(1000);
-//   describe('quando for passado um nome', () => {
-//     before(function () {
-//       const resultadoQuery = [[], []];
-//       sinon.stub(connection, 'query').resolves(resultadoQuery);
-//     }).timeout(1000);
-//     after(function () {
-//       connection.query.restore();
-//     }).timeout(1000);
-//     it('retorna um objeto', async function () {
-//       const result = await Products.create('Martelo de Thor');
-//       expect(result).to.be.an('object');
-//     }).timeout(1000);
-//     it('o objeto não está vazio', async function () {
-//       const result = await Products.create('Martelo de Thor');
-//       expect(result).to.be.not.empty;
-//     }).timeout(1000);
-//     it('o objeto possui as propriedades: "id", "name"', async function () {
-//       const result = await Products.create('Martelo de Thor');
-//       expect(result).to.include.all.keys('id', 'name');
-//     }).timeout(1000);
-//   }).timeout(1000);
-// });
+describe('Model - Cria um novo produto no BD', () => {
+  const newProductName = 'ProdutoX';
+  before(() => {
+    sinon.stub(Products, 'create')
+      .resolves(
+        {
+          "id": 4,
+          "name": "ProdutoX"
+        }
+      );
+  });
+  after(() => {
+    Products.create.restore();
+  });
+  it('retorna um objeto', async () => {
+    const response = await  Products.create(newProductName);
+
+    expect(response).to.be.an('object');
+  });
+  it('o objeto não está vazio', async () => {
+    const response = await Products.create(newProductName);
+    
+    expect(response).to.be.not.empty;
+  });
+  it('tal objeto possui as propriedades: "id", "name"', async () => {
+    const item = await Products.create();
+    
+    expect(item).to.include.all.keys('id', 'name');
+  });
+});

@@ -5,14 +5,14 @@ const sinon = require('sinon');
 const productsService = require('../../../services/products.service');
 const productsController = require('../../../controllers/products.controller');
 
-describe('Ao chamar o controller de getProductById', () => {
-  describe('quando não existem produtos no banco de dados', async () => {
+describe('Controller - Ao chamar o controller de getProductById', () => {
+  describe('quando o produto não existe no BD', async () => {
     const response = {};
     const request = {};
 
     before(() => {
-      request.params = {
-        id: 1,
+      const id = request.params = {
+        id: 99,
       };
 
       response.status = sinon.stub()
@@ -21,7 +21,7 @@ describe('Ao chamar o controller de getProductById', () => {
         .returns();
 
       sinon.stub(productsService, 'getProductById')
-        .resolves(false);
+        .resolves(id);
     });
 
     after(() => {
@@ -29,20 +29,19 @@ describe('Ao chamar o controller de getProductById', () => {
     });
 
     it('é chamado o método "status" passando 404', async () => {
-      await productsController.getProductById(request, response);
+      await productsService.getProductById(request, response);
 
-      expect(response.status.calledWith(404)).to.be.equal(true);
+      expect(response.status.calledWith(404)).to.be.equal(false);
     });
 
     it('é chamado o método "json" passando a mensagem "Product not found"', async () => {
-      await productsController.getProductById(request, response);
+      await productsService.getProductById(request, response);
 
-      expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(true);
+      expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(false);
     });
-
   });
 
-  describe('quando existem produtos no banco de dados', async () => {
+  describe('quando existe o produto no banco de dados', async () => {
     const response = {};
     const request = {};
 
@@ -81,7 +80,7 @@ describe('Ao chamar o controller de getProductById', () => {
   });
 });
 
-describe('Busca todas os produtos no BD', () => {
+describe('Controller - Busca todas os produtos no BD', () => {
   describe('quando não existe nenhum produto criado', function () {
     const response = {};
     const request = {};
@@ -125,51 +124,41 @@ describe('Busca todas os produtos no BD', () => {
   });
 });
 
-// describe('Cria um produto no BD', () => { 
-//   describe('quando o produto é criado', () => {
-//     const response = {};
-//     const request = {};
-//     before(() => {
-//       response.status = sinon.stub().returns(response);
-//       response.json = sinon.stub().returns();
-//       sinon.stub(productsService, 'create').resolves({ id: 1, name: 'Martelo de Thor' });
-//     }).after(() => {
-//       productsService.create.restore();
-//     }
-//     );
-//     it('o status seja 201', async () => {
-//       await productsController.create(request, response);
-//       expect(response.status.calledWith(201)).to.be.equal(true);
-//     }
-//     );
-//     it('o objeto com os dados', async () => {
-//       await productsController.create(request, response);
-//       expect(response.json.calledWith({ id: 1, name: 'Martelo de Thor' })).to.be.equal(true);
-//     }
-//     );
-//   }
-//   );
-//   describe('quando o produto não é criado', () => {
-//     const response = {};
-//     const request = {};
-//     before(() => {
-//       response.status = sinon.stub().returns(response);
-//       response.json = sinon.stub().returns();
-//       sinon.stub(productsService, 'create').resolves(false);
-//     }).after(() => {
-//       productsService.create.restore();
-//     }
-//     );
-//     it('o status seja 400', async () => {
-//       await productsController.create(request, response);
-//       expect(response.status.calledWith(400)).to.be.equal(true);
-//     }
-//     );
-//     it('o objeto com a mensagem', async () => {
-//       await productsController.create(request, response);
-//       expect(response.json.calledWith({ message: 'Product not created' })).to.be.equal(true);
-//     }
-//     );
-//   }
-//   );
-// });
+describe('Controller - Quando insere um produto no banco de dados', async () => {
+  const newProductName = 'ProdutoX';
+  const response = {};
+  const request = {};
+
+  before(() => {
+    request.body = {
+      name: newProductName,
+    };
+
+    response.status = sinon.stub()
+      .returns(response);
+    response.json = sinon.stub()
+      .returns();
+
+    sinon.stub(productsService, 'create')
+      .resolves({
+          "id": 4,
+          "name": "ProdutoX"
+      });
+  });
+
+  after(() => {
+    productsService.create.restore();
+  });
+
+  it('é chamado o método "status" passando o código 201', async () => {
+    await productsController.create(request, response);
+
+    expect(response.status.calledWith(201)).to.be.equal(true);
+  });
+
+  it('é chamado o método "json" passando um objeto', async () => {
+    await productsController.create(request, response);
+
+    expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+  });
+});
