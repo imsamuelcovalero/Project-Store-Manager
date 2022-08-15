@@ -20,9 +20,6 @@ describe('Service - Busca apenas um produto no BD por seu ID', () => {
     });
   });
   describe('quando existe um produto com o ID informado', () => {
-    // after(() => {
-    //   Products.getByPk.restore();
-    // });
     it('retorna um objeto', async () => {
       sinon.stub(Products, 'getByPk')
         .resolves(
