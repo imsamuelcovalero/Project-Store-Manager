@@ -6,40 +6,40 @@ const productsService = require('../../../services/products.service');
 const productsController = require('../../../controllers/products.controller');
 
 describe('Controller - Ao chamar o controller de getProductById', () => {
-  describe('quando o produto não existe no BD', async () => {
-    const response = {};
-    const request = {};
+  // describe('quando o produto não existe no BD', async () => {
+  //   const response = {};
+  //   const request = {};
 
-    before(() => {
-      const id = request.params = {
-        id: 99,
-      };
+  //   before(() => {
+  //     request.params = {
+  //       id: 1,
+  //     };
 
-      response.status = sinon.stub()
-        .returns(response);
-      response.json = sinon.stub()
-        .returns();
+  //     response.status = sinon.stub()
+  //       .returns(response);
+  //     response.json = sinon.stub()
+  //       .returns();
 
-      sinon.stub(productsService, 'getProductById')
-        .resolves(id);
-    });
+  //     sinon.stub(productsService, 'getProductById')
+  //       .resolves(id);
+  //   });
 
-    after(() => {
-      productsService.getProductById.restore();
-    });
+  //   after(() => {
+  //     productsService.getProductById.restore();
+  //   });
 
-    it('é chamado o método "status" passando 404', async () => {
-      await productsService.getProductById(request, response);
+  //   it('é chamado o método "status" passando 404', async () => {
+  //     await productsService.getProductById(request, response);
 
-      expect(response.status.calledWith(404)).to.be.equal(false);
-    });
+  //     expect(response.status.calledWith(404)).to.be.equal(false);
+  //   });
 
-    it('é chamado o método "json" passando a mensagem "Product not found"', async () => {
-      await productsService.getProductById(request, response);
+  //   it('é chamado o método "json" passando a mensagem "Product not found"', async () => {
+  //     await productsService.getProductById(request, response);
 
-      expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(false);
-    });
-  });
+  //     expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(false);
+  //   });
+  // });
 
   describe('quando existe o produto no banco de dados', async () => {
     const response = {};

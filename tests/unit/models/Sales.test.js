@@ -6,21 +6,20 @@ const connection = require('../../../models/connection');
 const Sales = require('../../../models/Sales');
 
 describe('Model -  Busca apenas uma venda no BD por seu ID', () => {
-  before(async () => {
-    const query = [[]];
-    sinon.stub(connection, 'query').resolves(query);
-  });
-  after(async () => {
-    connection.query.restore();
-  });
+  beforeEach(() => { 
+    sinon.restore();
+  })
   describe('quando não existe uma venda com o ID informado', () => {
     it('retorna undefined', async () => {
+      // sinon.stub(Sales, 'getByPk').resolves(undefined);
+      const query = [[]];
+      sinon.stub(connection, 'query').resolves(query);
       const response = await Sales.getByPk();
-      expect(response).to.be.equal(undefined);
+      expect(response.length).to.be.equal(0);
     });
   });
   describe('quando existe uma venda com o ID informado', () => {
-    before(() => {
+    it('retorna uma array', async () => {
       sinon.stub(Sales, 'getByPk')
         .resolves(
           [
@@ -36,22 +35,47 @@ describe('Model -  Busca apenas uma venda no BD por seu ID', () => {
             }
           ]
         );
-    });
-    after(() => {
-      Sales.getByPk.restore();
-    });
-    it('retorna uma array', async () => {
       const response = await  Sales.getByPk(1);
 
       expect(response).to.be.an('array');
     });
     it('a array não está vazia', async () => {
+      sinon.stub(Sales, 'getByPk')
+        .resolves(
+          [
+            {
+              "date": "2021-09-09T04:54:29.000Z",
+              "productId": 1,
+              "quantity": 2
+            },
+            {
+              "date": "2021-09-09T04:54:54.000Z",
+              "productId": 2,
+              "quantity": 2
+            }
+          ]
+        );
       const response = await  Sales.getByPk(1);
       expect(response).to.be.not.empty;
     });
     it('tal array possui as propriedades: "date", "productId", "quantity"', async () => {
+      sinon.stub(Sales, 'getByPk')
+        .resolves(
+          [
+            {
+              "date": "2021-09-09T04:54:29.000Z",
+              "productId": 1,
+              "quantity": 2
+            },
+            {
+              "date": "2021-09-09T04:54:54.000Z",
+              "productId": 2,
+              "quantity": 2
+            }
+          ]
+        );
       const item = await Sales.getByPk(1);
-      expect(item).to.include.all.keys('date', 'productId', 'quantity');
+      expect(item[0]).to.include.all.keys('date', 'productId', 'quantity');
     });
   });
 });
@@ -76,7 +100,7 @@ describe('Model - Busca todas as vendas no BD', () => {
   });
   describe('quando exitem vendas criados', () => {
     before(function () {
-      const resultadoQuery = [[{ saleId: 1, date: '2021-09-09T04:54:29.000Z', productId: 1, quantity: 2}], []];
+      const resultadoQuery = [[{ saleId: 1, date: '2022-08-15 12:50:00', productId: 1, quantity: 5}], []];
       sinon.stub(connection, 'query').resolves(resultadoQuery);
     });
     it('retorne um array', async function () {
@@ -99,7 +123,7 @@ describe('Model - Busca todas as vendas no BD', () => {
   });
 });
 
-// describe('Model - Cria um novo produto no BD', () => {
+// describe('Model - Cria uma nova venda no BD', () => {
 //   const newProductName = 'ProdutoX';
 //   before(() => {
 //     sinon.stub(Products, 'create')

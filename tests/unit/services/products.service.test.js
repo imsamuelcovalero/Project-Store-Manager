@@ -1,37 +1,29 @@
-const { expect } = require('chai');
-const { describe } = require('mocha');
-// const CustomError = require('../../../errors/CustomError');
+const { expect, use } = require('chai');
+const { describe, beforeEach } = require('mocha');
+const chai = require('chai-as-promised');
 const sinon = require('sinon');
-const connection = require('../../../models/connection');
+// const connection = require('../../../models/connection');
 
 const productsService = require('../../../services/products.service');
 const Products = require('../../../models/Products');
+use(chai);
 
 describe('Service - Busca apenas um produto no BD por seu ID', () => {
-  before(async () => {
-    const query = [[]];
-
-    sinon.stub(connection, 'query').resolves(query);
-  });
-  after(async () => {
-    connection.query.restore();
-  });
+  beforeEach(() => { 
+    sinon.restore();
+  })
   describe('quando não existe um produto com o ID informado', () => {
     it('retorna undefined', async () => {
-      const response = await Products.getByPk();
-      const response2 = await productsService.getProductById();
-      const err = new TypeError('Product not found');
+      sinon.stub(Products, 'getByPk').resolves(undefined);
 
-
-      expect(response).to.be.equal(undefined);
-      expect(response2).to.throw(err);
-
-      // expect(response).to.be.equal(false);
-      // expect(response).to.throw(new CustomError('Product not found'));
+      return expect(productsService.getProductById()).to.eventually.be.rejectedWith(Error, 'Product not found');
     });
   });
   describe('quando existe um produto com o ID informado', () => {
-    before(() => {
+    // after(() => {
+    //   Products.getByPk.restore();
+    // });
+    it('retorna um objeto', async () => {
       sinon.stub(Products, 'getByPk')
         .resolves(
           {
@@ -39,21 +31,30 @@ describe('Service - Busca apenas um produto no BD por seu ID', () => {
             "name": "Martelo de Thor"
           }
         );
-    });
-    after(() => {
-      Products.getByPk.restore();
-    });
-    it('retorna um objeto', async () => {
       const response = await  productsService.getProductById(1);
 
       expect(response).to.be.an('object');
     });
     it('o objeto não está vazio', async () => {
+      sinon.stub(Products, 'getByPk')
+        .resolves(
+          {
+            "id": 1,
+            "name": "Martelo de Thor"
+          }
+        );
       const response = await  productsService.getProductById(1);
 
       expect(response).to.be.not.empty;
     });
     it('tal objeto possui as propriedades: "id", "name"', async () => {
+      sinon.stub(Products, 'getByPk')
+        .resolves(
+          {
+            "id": 1,
+            "name": "Martelo de Thor"
+          }
+        );
       const item = await productsService.getProductById(1);
 
       expect(item).to.include.all.keys('id', 'name');
@@ -61,7 +62,7 @@ describe('Service - Busca apenas um produto no BD por seu ID', () => {
   });
 });
 
-describe('Service - Busca todas os produtos no BD', () => {
+describe('Service - Busca todos os produtos no BD', () => {
   describe('quando não existe nenhum produto criado', () => {
     before(function () {
       sinon.stub(Products, 'getAll').resolves([]);
@@ -79,7 +80,7 @@ describe('Service - Busca todas os produtos no BD', () => {
       expect(result).to.empty;
     });
   });
-  describe('quando exitem pessoas criadas', () => {
+  describe('quando exitem produtos criadas', () => {
     before(function () {
       sinon.stub(Products, 'getAll').resolves([{ id: 1, name: 'Martelo de Thor' }]);
     });

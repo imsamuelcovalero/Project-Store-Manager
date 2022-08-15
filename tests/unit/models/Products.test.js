@@ -92,30 +92,31 @@ describe('Model - Busca todos os produtos no BD', () => {
 });
 
 describe('Model - Cria um novo produto no BD', () => {
+  beforeEach(() => { 
+    sinon.restore();
+  })
   const newProductName = 'ProdutoX';
-  before(() => {
-    sinon.stub(Products, 'create')
-      .resolves(
-        {
-          "id": 4,
-          "name": "ProdutoX"
-        }
-      );
-  });
-  after(() => {
-    Products.create.restore();
-  });
+  const obj = {
+    "insertId": 4,
+    // "name": "ProdutoX"
+   }
+  // after(() => {
+  //   connection.query.restore();
+  // });
   it('retorna um objeto', async () => {
+    sinon.stub(connection, 'query').resolves([obj]);
     const response = await  Products.create(newProductName);
 
     expect(response).to.be.an('object');
   });
   it('o objeto não está vazio', async () => {
+    sinon.stub(connection, 'query').resolves([obj]);
     const response = await Products.create(newProductName);
     
     expect(response).to.be.not.empty;
   });
   it('tal objeto possui as propriedades: "id", "name"', async () => {
+    sinon.stub(connection, 'query').resolves([obj]);
     const item = await Products.create();
     
     expect(item).to.include.all.keys('id', 'name');
