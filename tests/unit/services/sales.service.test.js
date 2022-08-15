@@ -158,7 +158,6 @@ describe('Service - Cria uma nova venda no BD', () => {
       sinon.stub(Sales, 'createSale').resolves(newSale.id);
       sinon.stub(Sales, 'insertSalesProducts').resolves(newSale.itemsSold);
       const response = await salesService.create(newSale.itemsSold);
-      console.log('response', response);
 
       expect(response).to.be.an('object');
     })

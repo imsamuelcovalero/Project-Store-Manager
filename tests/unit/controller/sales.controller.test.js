@@ -1,164 +1,166 @@
-// const { expect } = require('chai');
-// const { describe } = require('mocha');
-// const sinon = require('sinon');
+const { expect } = require('chai');
+const { describe } = require('mocha');
+const sinon = require('sinon');
 
-// const salesService = require('../../../services/sales.service');
-// const salesController = require('../../../controllers/sales.controller');
+const salesService = require('../../../services/sales.service');
+const salesController = require('../../../controllers/sales.controller');
 
-// describe('Controller - Ao chamar o controller de getSaleById', () => {
-//   describe('quando a venda não existe no BD', async () => {
-//     const response = {};
-//     const request = {};
+describe('Controller - Ao chamar o controller de getSalesById', () => {
+  describe('quando existe a venda no banco de dados', async () => {
+    const response = {};
+    const request = {};
 
-//     before(() => {
-//       request.params = {
-//         id: 1,
-//       };
+    before(() => {
+      request.params = {
+        id: 1,
+      };
 
-//       response.status = sinon.stub()
-//         .returns(response);
-//       response.json = sinon.stub()
-//         .returns();
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
 
-//       sinon.stub(salesService, 'getSaleById')
-//         .resolves(id);
-//     });
+      sinon.stub(salesService, 'getSaleById')
+        .resolves([
+            {
+              "date": "2021-09-09T04:54:29.000Z",
+              "productId": 1,
+              "quantity": 2
+            },
+            {
+              "date": "2021-09-09T04:54:54.000Z",
+              "productId": 2,
+              "quantity": 2
+            }
+        ]);
+    });
 
-//     after(() => {
-//       salesService.getSaleById.restore();
-//     });
+    after(() => {
+      salesService.getSaleById.restore();
+    });
 
-//     it('é chamado o método "status" passando 404', async () => {
-//       await salesService.getSaleById(request, response);
+    it('é chamado o método "status" passando o código 200', async () => {
+      await salesController.getSaleById(request, response);
 
-//       expect(response.status.calledWith(404)).to.be.equal(false);
-//     });
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
 
-//     it('é chamado o método "json" passando a mensagem "Sale not found"', async () => {
-//       await salesService.getProductById(request, response);
+    it('é chamado o método "json" passando uma array', async () => {
+      await salesController.getSaleById(request, response);
 
-//       expect(response.json.calledWith({ message: 'Sale not found' })).to.be.equal(false);
-//     });
-//   });
+      expect(response.json.calledWith(sinon.match.array)).to.be.equal(true);
+    });
+  });
+});
 
-//   describe('quando existe o produto no banco de dados', async () => {
-//     const response = {};
-//     const request = {};
-
-//     before(() => {
-//       request.params = {
-//         id: 1,
-//       };
-
-//       response.status = sinon.stub()
-//         .returns(response);
-//       response.json = sinon.stub()
-//         .returns();
-
-//       sinon.stub(productsService, 'getProductById')
-//         .resolves({
-//             "id": 1,
-//             "name": "Martelo de Thor"
-//         });
-//     });
-
-//     after(() => {
-//       productsService.getProductById.restore();
-//     });
-
-//     it('é chamado o método "status" passando o código 200', async () => {
-//       await productsController.getProductById(request, response);
-
-//       expect(response.status.calledWith(200)).to.be.equal(true);
-//     });
-
-//     it('é chamado o método "json" passando um objeto', async () => {
-//       await productsController.getProductById(request, response);
-
-//       expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
-//     });
-//   });
-// });
-
-// describe('Controller - Busca todas os produtos no BD', () => {
-//   describe('quando não existe nenhum produto criado', function () {
-//     const response = {};
-//     const request = {};
-//     before(() => {
-//       response.status = sinon.stub().returns(response);
-//       response.json = sinon.stub().returns();
-//       sinon.stub(productsService, 'getAll').resolves([]);
-//     });
-//     after(function () {
-//       productsService.getAll.restore();
-//     });
+describe('Controller - Busca todas as vendas no BD', () => {
+  describe('quando não existe nenhuma venda criada', function () {
+    const response = {};
+    const request = {};
+    before(() => {
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+      sinon.stub(salesService, 'getAll').resolves([]);
+    });
+    after(function () {
+      salesService.getAll.restore();
+    });
     
-//     it('o status seja 200', async function () {
-//       await productsController.getAll(request, response);
-//       expect(response.status.calledWith(200)).to.be.equal(true);
-//     });
-//     it('o array vazio', async function () {
-//       await productsController.getAll(request, response);
-//       expect(response.json.calledWith([])).to.be.equal(true);
-//     });
-//   });
-//   describe('quando exitem produtos criados', function () {
-//     const response = {};
-//     const request = {};
-//     before(() => {
-//       response.status = sinon.stub().returns(response);
-//       response.json = sinon.stub().returns();
-//       sinon.stub(productsService, 'getAll').resolves([{ id: 1, name: 'Martelo de Thor' }]);
-//     });
-//     after(function () {
-//       productsService.getAll.restore();
-//     });
-//     it('o status seja 200', async function () {
-//       await productsController.getAll(request, response);
-//       expect(response.status.calledWith(200)).to.be.equal(true);
-//     });
-//     it('o array com os dados', async function () {
-//       await productsController.getAll(request, response);
-//       expect(response.json.calledWith([{ id: 1, name: 'Martelo de Thor' }])).to.be.equal(true);
-//     });
-//   });
-// });
+    it('o status seja 200', async function () {
+      await salesController.getAll(request, response);
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
+    it('o array vazio', async function () {
+      await salesController.getAll(request, response);
+      expect(response.json.calledWith([])).to.be.equal(true);
+    });
+  });
+  describe('quando exitem vendas criadas', function () {
+    const response = {};
+    const request = {};
+    before(() => {
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+      sinon.stub(salesService, 'getAll').resolves([[{ saleId: 1, date: '2022-08-15 12:50:00', productId: 1, quantity: 5}], []]);
+    });
+    after(function () {
+      salesService.getAll.restore();
+    });
+    it('o status seja 200', async function () {
+      await salesController.getAll(request, response);
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
+    it('o array com os dados', async function () {
+      await salesController.getAll(request, response);
+      expect(response.json.calledWith([[{ saleId: 1, date: '2022-08-15 12:50:00', productId: 1, quantity: 5}], []])).to.be.equal(true);
+    });
+  });
+});
 
-// describe('Controller - Quando insere um produto no banco de dados', async () => {
-//   const newProductName = 'ProdutoX';
-//   const response = {};
-//   const request = {};
+describe('quando é criada uma nova venda no banco de dados', async () => {
+    const response = {};
+    const request = {};
 
-//   before(() => {
-//     request.body = {
-//       name: newProductName,
-//     };
+    before(() => {
+      request.body = [
+        {
+          "productId": 1,
+          "quantity":1
+        },
+        {
+          "productId": 2,
+          "quantity":5
+        }
+      ];
 
-//     response.status = sinon.stub()
-//       .returns(response);
-//     response.json = sinon.stub()
-//       .returns();
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
 
-//     sinon.stub(productsService, 'create')
-//       .resolves({
-//           "id": 4,
-//           "name": "ProdutoX"
-//       });
-//   });
+      sinon.stub(salesService, 'create')
+        .resolves({
+          "id": 3,
+          "itemsSold": [
+            {
+              "productId": 1,
+              "quantity":1
+            },
+            {
+              "productId": 2,
+              "quantity":5
+            }
+          ]
+        });
+    });
 
-//   after(() => {
-//     productsService.create.restore();
-//   });
+    after(() => {
+      salesService.create.restore();
+    });
 
-//   it('é chamado o método "status" passando o código 201', async () => {
-//     await productsController.create(request, response);
+    it('é chamado o método "status" passando o código 201', async () => {
+      await salesController.create(request, response);
+      expect(response.status.calledWith(201)).to.be.equal(true);
+    });
 
-//     expect(response.status.calledWith(201)).to.be.equal(true);
-//   });
-
-//   it('é chamado o método "json" passando um objeto', async () => {
-//     await productsController.create(request, response);
-
-//     expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
-//   });
-// });
+    it('é chamado o método "json" passando um objeto', async () => {
+      await salesController.create(request, response);
+      expect(response.json.calledWith(sinon.match.object)).to.be.deep.equal(true);
+    });
+    it('o objeto com os dados', async function () {
+      await salesController.create(request, response);
+      expect(response.json.calledWith({
+          "id": 3,
+          "itemsSold": [
+            {
+              "productId": 1,
+              "quantity":1
+            },
+            {
+              "productId": 2,
+              "quantity":5
+            }
+          ]
+        })).to.be.equal(true);
+    });
+});
