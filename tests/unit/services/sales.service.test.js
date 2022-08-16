@@ -8,6 +8,7 @@ const salesService = require('../../../services/sales.service');
 const Sales = require('../../../models/Sales');
 // const Products = require('../../../models/Products');
 const verify = require('../../../helpers/verify');
+const Products = require('../../../models/Products');
 use(chai);
 
 describe('Service - Busca apenas uma venda no BD por seu ID', () => {
@@ -135,43 +136,51 @@ describe('Service - Cria uma nova venda no BD', () => {
   })
   describe('quando não existe um produto com o ID informado', () => {
     it('encerra a requisição retornando o erro', async () => {
-      sinon.stub(verify, 'verifyProduct').resolves(false);
+      // sinon.stub(Products, 'getAll').resolves([{ id: 1, name: 'Produto 1' }]);
+      // await salesService.create(itemsSold);
+      sinon.stub(verify, 'verifyProduct').returns(false);
 
       return expect(salesService.create()).to.eventually.be.rejectedWith(Error, 'Product not found');
     });
   });
   describe('quando é criada uma nova venda', () => { 
-    const newSale = {
+    beforeEach(() => { 
+      sinon.restore();
+    })
+    const newSaleObj = {
       "id": 3,
       "itemsSold": [
         {
           "productId": 1,
           "quantity":1
         },
-        {
-          "productId": 2,
-          "quantity":5
-        }
+        // {
+        //   "productId": 2,
+        //   "quantity":5
+        // }
       ]
     }
     it('retorna um objeto', async () => { 
-      sinon.stub(Sales, 'createSale').resolves(newSale.id);
-      sinon.stub(Sales, 'insertSalesProducts').resolves(newSale.itemsSold);
-      const response = await salesService.create(newSale.itemsSold);
+      sinon.stub(Products, 'getAll').resolves([{ id: 1, name: 'Produto 1' }]);
+      sinon.stub(Sales, 'createSale').resolves(newSaleObj.id);
+      sinon.stub(Sales, 'insertSalesProducts').resolves(newSaleObj.itemsSold);
+      const response = await salesService.create(newSaleObj.itemsSold);
 
       expect(response).to.be.an('object');
     })
     it('o objeto não está vazio', async () => {
-      sinon.stub(Sales, 'createSale').resolves(newSale.id);
-      sinon.stub(Sales, 'insertSalesProducts').resolves(newSale.itemsSold);
-      const response = await salesService.create(newSale.itemsSold);
+      sinon.stub(Products, 'getAll').resolves([{ id: 1, name: 'Martelo de Thor' }]);
+      sinon.stub(Sales, 'createSale').resolves(newSaleObj.id);
+      sinon.stub(Sales, 'insertSalesProducts').resolves(newSaleObj.itemsSold);
+      const response = await salesService.create(newSaleObj.itemsSold);
 
       expect(response).to.be.not.empty;
     })
     it('o objeto possui as propriedades: "id", "itemsSold"', async () => {
-      sinon.stub(Sales, 'createSale').resolves(newSale.id);
-      sinon.stub(Sales, 'insertSalesProducts').resolves(newSale.itemsSold);
-      const item = await salesService.create(newSale.itemsSold);
+      sinon.stub(Products, 'getAll').resolves([{ id: 1, name: 'Martelo de Thor' }]);
+      sinon.stub(Sales, 'createSale').resolves(newSaleObj.id);
+      sinon.stub(Sales, 'insertSalesProducts').resolves(newSaleObj.itemsSold);
+      const item = await salesService.create(newSaleObj.itemsSold);
 
       expect(item).to.include.all.keys('id', 'itemsSold');
     })

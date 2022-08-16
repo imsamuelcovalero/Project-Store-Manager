@@ -1,7 +1,7 @@
 const CustomError = require('../errors/CustomError');
 const SalesModel = require('../models/Sales');
 const ProductsModel = require('../models/Products');
-const { verifyProduct } = require('../helpers/verify');
+const verify = require('../helpers/verify');
 
 const salesService = {
   getSaleById: async (id) => {
@@ -20,7 +20,7 @@ const salesService = {
   
   create: async (itemsSold) => {
     const allSales = await ProductsModel.getAll();
-    const verifyIfProductExists = verifyProduct(itemsSold, allSales);
+    const verifyIfProductExists = verify.verifyProduct(itemsSold, allSales);
     if (verifyIfProductExists === false) {
       throw new CustomError(404, 'Product not found');
     }

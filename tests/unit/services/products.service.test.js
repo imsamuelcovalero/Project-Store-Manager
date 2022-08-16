@@ -28,7 +28,7 @@ describe('Service - Busca apenas um produto no BD por seu ID', () => {
             "name": "Martelo de Thor"
           }
         );
-      const response = await  productsService.getProductById(1);
+      const response = await  productsService.getProductById(99);
 
       expect(response).to.be.an('object');
     });
@@ -130,5 +130,65 @@ describe('Service - Cria um novo produto no BD', () => {
   it('tal objeto possui as propriedades: "id", "name"', async () => {
     const item = await Products.create();
     expect(item).to.include.all.keys('id', 'name');
+  });
+});
+
+describe('Service - Atualiza um produto no BD', () => {
+  beforeEach(() => {
+    sinon.restore();
+  })
+  const productToUpdate = { id:4, name:'Produto 2' };
+  describe('quando não existe um produto com o ID informado', () => {
+    it('retorna undefined', async () => {
+      sinon.stub(Products, 'getByPk').resolves(undefined);
+
+      return expect(productsService.update()).to.eventually.be.rejectedWith(Error, 'Product not found');
+    });
+  });
+  describe('quando existe um produto com o ID informado', () => {
+    it('retorna um objeto', async () => {
+      // sinon.stub(Products, 'update')
+      //   .resolves(
+      //     {"id": 4,"name": "Martelo de Thor"}
+      //   );
+      sinon.stub(Products, 'update').resolves({ "id": 4, "name": "Produto 2" });
+      sinon.stub(Products, 'getByPk').resolves(productToUpdate);
+      const response = await productsService.update(productToUpdate.id, productToUpdate.name);
+      expect(response).to.be.an('object');
+    });
+    it('o objeto não está vazio', async () => {
+      sinon.stub(Products, 'update').resolves({ "id": 4, "name": "Produto 2" });
+      sinon.stub(Products, 'getByPk').resolves(productToUpdate);
+      const response = await  productsService.update(productToUpdate.id, productToUpdate.name);
+      expect(response).to.be.not.empty;
+    });
+    it('tal objeto possui as propriedades: "id", "name"', async () => {
+      sinon.stub(Products, 'update').resolves({ "id": 4, "name": "Produto 2" });
+      sinon.stub(Products, 'getByPk').resolves(productToUpdate);
+      const response = await productsService.update(productToUpdate.id, productToUpdate.name);
+      expect(response).to.include.all.keys('id', 'name');
+    });
+  });
+});
+
+describe('Service - Deleta um produto no BD', () => {
+  beforeEach(() => { 
+    sinon.restore();
+  })
+  const productToDelete = {
+    "id": 4,
+  }
+  describe('quando não existe um produto com o ID informado', () => {
+    it('retorna undefined', async () => {
+      sinon.stub(Products, 'getByPk').resolves(undefined);
+
+      return expect(productsService.delete()).to.eventually.be.rejectedWith(Error, 'Product not found');
+    });
+  });
+  it('retorna true da requisição', async () => {
+    sinon.stub(Products, 'getByPk').resolves(productToDelete);
+    sinon.stub(Products, 'delete').resolves(true);
+    const response = await productsService.delete(productToDelete.id);
+    expect(response).to.be.equal(true);
   });
 });

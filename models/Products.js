@@ -32,10 +32,11 @@ const Products = {
   },
 
   delete: async (id) => {
-    await connection.query(`
+    const [{ affectedRows }] = await connection.query(`
     DELETE FROM StoreManager.products
     WHERE id = ?
     `, [id]);
+    return affectedRows;
   },
 };
 

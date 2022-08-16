@@ -36,13 +36,13 @@ const productsController = {
 
   delete: async (req, res) => {
     const { id } = req.params;
-    const deletedProduct = await productsService.delete(id);
+    await productsService.delete(id);
 
     // if (deletedProduct === false) {
     //   throw new CustomError(404, 'Product not found');
     // }
     
-    res.status(204).json(deletedProduct);
+    res.status(204).json();
   },
 };
 

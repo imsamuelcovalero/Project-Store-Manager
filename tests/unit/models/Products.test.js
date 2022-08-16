@@ -152,29 +152,16 @@ describe('Model - Atualiza um produto no BD', () => {
   });
 });
 
-// describe('Model - Deleta um produto no BD', () => {
-//   beforeEach(() => {
-//     sinon.restore();
-//   })
-//   const productToDelete = {
-//     "insertId": 4,
-//   }
-//   it('retorna um objeto', async () => {
-//     sinon.stub(connection, 'query').resolves([{}]);
-//     const response = await Products.delete(productToDelete);
-
-//     expect(response).to.be.an('object');
-//   });
-//   // it('o objeto não está vazio', async () => {
-//   //   sinon.stub(connection, 'query').resolves([{}]);
-//   //   const response = await Products.delete(1);
-    
-//   //   expect(response).to.be.not.empty;
-//   // }),
-//   // it('tal objeto possui as propriedades: "id", "name"', async () => {
-//   //   sinon.stub(connection, 'query').resolves([{}]);
-//   //   const item = await Products.delete();
-    
-//   //   expect(item).to.include.all.keys('id', 'name');
-//   // }),
-// });
+describe('Model - Deleta um produto no BD', () => {
+  beforeEach(() => {
+    sinon.restore();
+  })
+  const productToDelete = {
+    "insertId": 4,
+  }
+  it('retorna true', async () => {
+    sinon.stub(connection, 'query').resolves([{ affectedRows: 1 }]);
+    const response = await Products.delete(productToDelete);
+    expect(!!response).to.be.equal(true);
+  });
+});
