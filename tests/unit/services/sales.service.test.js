@@ -1,12 +1,12 @@
 const { expect, use } = require('chai');
-const { describe, beforeEach } = require('mocha');
+const { describe, beforeEach, after } = require('mocha');
 const chai = require('chai-as-promised');
 const sinon = require('sinon');
 const connection = require('../../../models/connection');
 
 const salesService = require('../../../services/sales.service');
 const Sales = require('../../../models/Sales');
-const Products = require('../../../models/Products');
+// const Products = require('../../../models/Products');
 const verify = require('../../../helpers/verify');
 use(chai);
 
@@ -135,12 +135,12 @@ describe('Service - Cria uma nova venda no BD', () => {
   })
   describe('quando não existe um produto com o ID informado', () => {
     it('encerra a requisição retornando o erro', async () => {
-      sinon.stub(verify, 'verifyProducts').resolves(false);
+      sinon.stub(verify, 'verifyProduct').resolves(false);
 
       return expect(salesService.create()).to.eventually.be.rejectedWith(Error, 'Product not found');
     });
   });
-  describe('quanto é criada uma nova venda', () => { 
+  describe('quando é criada uma nova venda', () => { 
     const newSale = {
       "id": 3,
       "itemsSold": [

@@ -36,7 +36,6 @@ const Products = {
     DELETE FROM StoreManager.products
     WHERE id = ?
     `, [id]);
-    return { id };
   },
 };
 
