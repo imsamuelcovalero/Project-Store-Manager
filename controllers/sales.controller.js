@@ -16,10 +16,25 @@ const salesController = {
 
   create: async (req, res) => {
     const itemsSold = req.body;
-    // console.log(itemsSold);
     const newSale = await salesService.create(itemsSold);
 
     res.status(201).json(newSale);
+  },
+
+  delete: async (req, res) => {
+    const { id } = req.params;
+    await salesService.delete(id);
+
+    res.status(204).json();
+  },
+
+  update: async (req, res) => {
+    const { id } = req.params;
+    const itemsToUpdate = req.body;
+    // console.log('itemsToUpdate', itemsToUpdate);
+    const updatedSale = await salesService.update(id, itemsToUpdate);
+
+    res.status(200).json(updatedSale);
   },
 };
 

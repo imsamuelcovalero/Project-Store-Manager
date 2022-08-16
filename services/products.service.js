@@ -36,7 +36,6 @@ const productsService = {
       throw new CustomError(404, 'Product not found');
     }
     const result = await ProductsModel.delete(id);
-    console.log('result', result);
     return result;
   },
 };
