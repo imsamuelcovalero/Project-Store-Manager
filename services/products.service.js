@@ -38,6 +38,12 @@ const productsService = {
     const result = await ProductsModel.delete(id);
     return result;
   },
+
+  getProductsByName: async (name) => {
+    const result = await ProductsModel.getProductsByName(name);
+    console.log('result', result);
+    return result;
+  },
 };
 
 module.exports = productsService;

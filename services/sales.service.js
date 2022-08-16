@@ -58,12 +58,8 @@ const salesService = {
       itemsToUpdate.map(({ productId, quantity }) => SalesModel
         .update({ id, productId, quantity })),
     );
-    console.log('salesToUpdate', salesToUpdate);
     const saleUpdated = { saleId: id, itemsUpdated: salesToUpdate };
-    console.log('saleUpdated', saleUpdated);
     return saleUpdated;
-    // const result = await SalesModel.update(id, itemsToUpdate);
-    // return result;
   },
 };
 

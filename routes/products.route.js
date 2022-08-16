@@ -4,6 +4,7 @@ const { validateName } = require('../middlewares/validators');
 
 const route = Router();
 
+route.get('/search', productsController.getProductsByName);
 route.get('/:id', productsController.getProductById);
 route.put('/:id', validateName, productsController.update);
 route.delete('/:id', productsController.delete);

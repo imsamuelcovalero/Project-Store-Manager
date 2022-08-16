@@ -38,6 +38,14 @@ const Products = {
     `, [id]);
     return affectedRows;
   },
+
+  getProductsByName: async (name) => {
+    const [result] = await connection.query(`
+    SELECT * from StoreManager.products
+    WHERE name LIKE ?
+    `, [`%${name}%`]);
+    return result;
+  },
 };
 
 module.exports = Products;
