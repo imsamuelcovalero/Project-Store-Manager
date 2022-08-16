@@ -29,6 +29,15 @@ const productsService = {
     const result = await ProductsModel.update(id, newProductName);
     return result;
   },
+
+  delete: async (id) => {
+    const verifyProduct = await ProductsModel.getByPk(id);
+    if (!verifyProduct) {
+      throw new CustomError(404, 'Product not found');
+    }
+    const result = await ProductsModel.delete(id);
+    return result;
+  },
 };
 
 module.exports = productsService;

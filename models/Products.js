@@ -30,6 +30,14 @@ const Products = {
     `, [name, id]);
     return { id, name };
   },
+
+  delete: async (id) => {
+    await connection.query(`
+    DELETE FROM StoreManager.products
+    WHERE id = ?
+    `, [id]);
+    return { id };
+  },
 };
 
 module.exports = Products;
