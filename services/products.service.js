@@ -20,6 +20,15 @@ const productsService = {
     const result = await ProductsModel.create(newProductName);
     return result;
   },
+
+  update: async (id, newProductName) => {
+    const verifyProduct = await ProductsModel.getByPk(id);
+    if (!verifyProduct) {
+      throw new CustomError(404, 'Product not found');
+    }
+    const result = await ProductsModel.update(id, newProductName);
+    return result;
+  },
 };
 
 module.exports = productsService;
