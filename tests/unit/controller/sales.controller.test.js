@@ -164,3 +164,76 @@ describe('quando é criada uma nova venda no banco de dados', async () => {
         })).to.be.equal(true);
     });
 });
+
+describe('Controller - Quando atualiza uma venda no banco de dados', async () => {
+  const newProductName = 'ProdutoX';
+  const response = {};
+  const request = {};
+
+  before(() => {
+    request.body = {
+      name: newProductName,
+    };
+    request.params = {
+      id: 4,
+    };
+
+    response.status = sinon.stub()
+      .returns(response);
+    response.json = sinon.stub()
+      .returns();
+
+    sinon.stub(salesService, 'update')
+      .resolves({
+          "id": 4,
+          "name": "ProdutoX"
+      });
+  });
+
+  after(() => {
+    salesService.update.restore();
+  });
+
+  it('é chamado o método "status" passando o código 200', async () => {
+    await salesController.update(request, response);
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('é chamado o método "json" passando um objeto', async () => {
+    await salesController.update(request, response);
+    expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+  });
+});
+
+describe('Controller - Quando remove uma venda no banco de dados', async () => {
+  const response = {};
+  const request = {};
+
+  before(() => {
+    request.params = {
+      id: 1,
+    };
+
+    response.status = sinon.stub()
+      .returns(response);
+    response.json = sinon.stub()
+      .returns();
+
+    sinon.stub(salesService, 'delete')
+      .resolves(true);
+  });
+  
+  after(() => {
+    salesService.delete.restore();
+  });
+
+  it('é chamado o método "status" passando o código 204', async () => {
+    await salesController.delete(request, response);
+    expect(response.status.calledWith(204)).to.be.equal(true);
+  });
+  
+  it('é chamado o método "json" vazio', async () => {
+    await salesController.delete(request, response);
+    expect(response.json.calledWith()).to.be.equal(true);
+  });
+});

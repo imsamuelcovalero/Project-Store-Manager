@@ -4,19 +4,13 @@
     "colId": "c17b5666-7fc7-49f2-9a16-12d46200f44f",
     "containerId": "",
     "name": "projeto",
-    "url": "http://localhost:3000/products/search?q=",
+    "url": "http://localhost:3000/sales/2",
     "method": "GET",
     "sortNum": 10000,
     "created": "2022-08-11T18:46:53.021Z",
-    "modified": "2022-08-16T21:17:39.774Z",
+    "modified": "2022-08-16T22:17:09.272Z",
     "headers": [],
-    "params": [
-      {
-        "name": "q",
-        "value": "",
-        "isPath": false
-      }
-    ],
+    "params": [],
     "tests": []
   }
 ]

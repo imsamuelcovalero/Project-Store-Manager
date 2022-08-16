@@ -158,34 +158,84 @@ describe('Model - Cria uma venda no BD', () => {
       sinon.restore();
       })
     
+    const answerObj = {
+      "productId": 1,
+      "quantity":1
+    }
     const newsale = {
       "id": 4,
       "productId": 1,
       "quantity":1
     }
+
+    it('retorna um objeto', async () => {
+      sinon.stub(connection, 'query').resolves([answerObj]);
+      const response = await  Sales.insertSalesProducts(newsale);
+
+      expect(response).to.be.an('object');
+    });
+    it('o objeto não está vazio', async () => {
+      sinon.stub(connection, 'query').resolves([answerObj]);
+      const response = await Sales.insertSalesProducts(newsale);
+      
+      expect(response).to.be.not.empty;
+    });
+    it('tal objeto possui as propriedades: "productId", "quantity"', async () => {
+      sinon.stub(connection, 'query').resolves([answerObj]);
+      const item = await Sales.insertSalesProducts(newsale);
+      
+      expect(item).to.include.all.keys('productId', 'quantity');
+    });
+    });
+});
+
+describe('Model - Atualiza uma venda no BD', () => {
+  describe('quanto é atualizada uma venda', () => {
+    beforeEach(() => {
+      sinon.restore();
+    })
     
     const answerObj = {
       "productId": 1,
       "quantity":1
     }
+    const saleToUpdate = {
+      "id": 4,
+      "productId": 1,
+      "quantity":1
+    }
 
-      it('retorna um objeto', async () => {
-        sinon.stub(connection, 'query').resolves([answerObj]);
-        const response = await  Sales.insertSalesProducts(newsale);
+    it('retorna um objeto', async () => {
+      sinon.stub(connection, 'query').resolves([answerObj]);
+      const response = await  Sales.update(saleToUpdate);
 
-        expect(response).to.be.an('object');
-      });
-      it('o objeto não está vazio', async () => {
-        sinon.stub(connection, 'query').resolves([answerObj]);
-        const response = await Sales.insertSalesProducts(newsale);
-        
-        expect(response).to.be.not.empty;
-      });
-      it('tal objeto possui as propriedades: "productId", "quantity"', async () => {
-        sinon.stub(connection, 'query').resolves([answerObj]);
-        const item = await Sales.insertSalesProducts(newsale);
-        
-        expect(item).to.include.all.keys('productId', 'quantity');
-      });
+      expect(response).to.be.an('object');
     });
+    it('o objeto não está vazio', async () => {
+      sinon.stub(connection, 'query').resolves([answerObj]);
+      const response = await Sales.update(saleToUpdate);
+      
+      expect(response).to.be.not.empty;
+    });
+    it('tal objeto possui as propriedades: "productId", "quantity"', async () => {
+      sinon.stub(connection, 'query').resolves([answerObj]);
+      const item = await Sales.update(saleToUpdate);
+      
+      expect(item).to.include.all.keys('productId', 'quantity');
+    });
+  });
+});
+
+describe('Model - Deleta uma venda no BD', () => {
+  beforeEach(() => {
+    sinon.restore();
+  })
+  const saleToDelete = {
+    "insertId": 4,
+  }
+  it('retorna true', async () => {
+    sinon.stub(connection, 'query').resolves([{ affectedRows: 1 }]);
+    const response = await Sales.delete(saleToDelete);
+    expect(!!response).to.be.equal(true);
+  });
 });
