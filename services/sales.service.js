@@ -48,12 +48,13 @@ const salesService = {
     if (verifySale.length === 0) {
       throw new CustomError(404, 'Sale not found');
     }
+
     const allProducts = await ProductsModel.getAll();
     const verifyIfProductExists = verify.verifySaleProducts(itemsToUpdate, allProducts);
-    console.log('verifyIfProductExists', verifyIfProductExists);
     if (verifyIfProductExists === false) {
       throw new CustomError(404, 'Product not found');
     }
+
     const salesToUpdate = await Promise.all(
       itemsToUpdate.map(({ productId, quantity }) => SalesModel
         .update({ id, productId, quantity })),

@@ -42,7 +42,13 @@ const productsService = {
   getProductsByName: async (name) => {
     const result = await ProductsModel.getProductsByName(name);
     console.log('result', result);
-    return result;
+    // if (!result) {
+    //   const data = await ProductsModel.getAll();
+    //   console.log('data', data);
+    //   return data;
+    // }
+    const data = result;
+    return data;
   },
 };
 

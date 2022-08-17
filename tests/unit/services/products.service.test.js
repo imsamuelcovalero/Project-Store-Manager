@@ -192,3 +192,48 @@ describe('Service - Deleta um produto no BD', () => {
     expect(response).to.be.equal(true);
   });
 });
+
+describe('Service - Busca um produto no BD por seu nome', () => {
+  beforeEach(() => { 
+    sinon.restore();
+  })
+  describe('quando existe um produto com o nome informado', () => {
+    const productName = 'Martelo';
+    it('retorna um objeto', async () => {
+      sinon.stub(Products, 'getProductsByName')
+        .resolves(
+          {
+            "id": 1,
+            "name": "Martelo de Thor"
+          }
+        );
+      const response = await  productsService.getProductsByName(productName);
+
+      expect(response).to.be.an('object');
+    });
+    it('o objeto não está vazio', async () => {
+      sinon.stub(Products, 'getByPk')
+        .resolves(
+          {
+            "id": 1,
+            "name": "Martelo de Thor"
+          }
+        );
+      const response = await  productsService.getProductsByName(productName);
+
+      expect(response).to.be.not.empty;
+    });
+    it('tal objeto possui as propriedades: "id", "name"', async () => {
+      sinon.stub(Products, 'getByPk')
+        .resolves(
+          {
+            "id": 1,
+            "name": "Martelo de Thor"
+          }
+        );
+      const item = await productsService.getProductsByName(productName);
+
+      expect(item[0]).to.include.all.keys('id', 'name');
+    });
+  });
+});

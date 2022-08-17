@@ -6,41 +6,6 @@ const productsService = require('../../../services/products.service');
 const productsController = require('../../../controllers/products.controller');
 
 describe('Controller - Ao chamar o controller de getProductById', () => {
-  // describe('quando o produto não existe no BD', async () => {
-  //   const response = {};
-  //   const request = {};
-
-  //   before(() => {
-  //     request.params = {
-  //       id: 1,
-  //     };
-
-  //     response.status = sinon.stub()
-  //       .returns(response);
-  //     response.json = sinon.stub()
-  //       .returns();
-
-  //     sinon.stub(productsService, 'getProductById')
-  //       .resolves(id);
-  //   });
-
-  //   after(() => {
-  //     productsService.getProductById.restore();
-  //   });
-
-  //   it('é chamado o método "status" passando 404', async () => {
-  //     await productsService.getProductById(request, response);
-
-  //     expect(response.status.calledWith(404)).to.be.equal(false);
-  //   });
-
-  //   it('é chamado o método "json" passando a mensagem "Product not found"', async () => {
-  //     await productsService.getProductById(request, response);
-
-  //     expect(response.json.calledWith({ message: 'Product not found' })).to.be.equal(false);
-  //   });
-  // });
-
   describe('quando existe o produto no banco de dados', async () => {
     const response = {};
     const request = {};
@@ -231,5 +196,45 @@ describe('Controller - Quando remove um produto no banco de dados', async () => 
   it('é chamado o método "json" vazio', async () => {
     await productsController.delete(request, response);
     expect(response.json.calledWith()).to.be.equal(true);
+  });
+});
+
+describe('Controller - Quando busca um produto pelo nome', () => {
+  describe('quando existe o produto no banco de dados', async () => {
+    const response = {};
+    const request = {};
+
+    before(() => {
+      request.query = {
+        "name": "Martelo",
+      };
+
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
+
+      sinon.stub(productsService, 'getProductsByName')
+        .resolves({
+            "id": 1,
+            "name": "Martelo de Thor"
+        });
+    });
+
+    after(() => {
+      productsService.getProductsByName.restore();
+    });
+
+    it('é chamado o método "status" passando o código 200', async () => {
+      await productsController.getProductsByName(request, response);
+
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" passando um objeto', async () => {
+      await productsController.getProductsByName(request, response);
+
+      expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+    });
   });
 });

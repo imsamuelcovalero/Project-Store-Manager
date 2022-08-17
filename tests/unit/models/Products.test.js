@@ -165,3 +165,51 @@ describe('Model - Deleta um produto no BD', () => {
     expect(!!response).to.be.equal(true);
   });
 });
+
+describe('Model - Busca um produto no BD pelo seu nome', () => {
+  // beforeEach(() => { 
+  //   sinon.restore();
+  // })
+  // before(async () => {
+  //   const query = [[]];
+  //   sinon.stub(connection, 'query').resolves(query);
+  // });
+  // after(async () => {
+  //   connection.query.restore();
+  // });
+  // describe('quando não existe um produto com o nome informado', () => {
+  //   it('retorna uma array vazia', async () => {
+  //     const response = await Products.getProductsByName();
+  //     expect(response).to.be.deep.equal([]);
+  //   });
+  // });
+  describe('quando existe um produto com o nome informado', () => {
+    before(() => {
+      sinon.stub(Products, 'getProductsByName')
+        .resolves(
+          {
+            "id": 1,
+            "name": "Martelo de Thor"
+          }
+        );
+    });
+    const productName = 'Martelo';
+    after(() => {
+      Products.getProductsByName.restore();
+    });
+    it('retorna um objeto', async () => {
+      const response = await  Products.getProductsByName(productName);
+
+      expect(response).to.be.an('object');
+    });
+    it('o objeto não está vazio', async () => {
+      const response = await  Products.getProductsByName(productName);
+      expect(response).to.be.not.empty;
+    });
+    it('tal objeto possui as propriedades: "id", "name"', async () => {
+      const item = await Products.getProductsByName(productName);
+      // console.log('item', item);
+      expect(item).to.include.all.keys('id', 'name');
+    });
+  });
+})

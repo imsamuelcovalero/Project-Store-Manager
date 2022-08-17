@@ -49,6 +49,7 @@ const productsController = {
   getProductsByName: async (req, res) => {
     const { q } = req.query;
     const products = await productsService.getProductsByName(q);
+    console.log('products', products);
 
     res.status(200).json(products);
   },
