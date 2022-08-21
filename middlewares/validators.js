@@ -2,7 +2,6 @@ const Joi = require('joi');
 
 const validators = {
   validateName: async (req, res, next) => {
-    // const { name } = req.body;
     const schema = Joi.object({
       name: Joi.string().min(5).required()
         .messages({
@@ -33,8 +32,6 @@ const validators = {
     }));
 
     const { error } = schema.validate(req.body);
-
-    // console.log(error);
 
     if (error) {
       const [status, message] = error.message.split('|');

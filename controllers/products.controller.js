@@ -1,5 +1,4 @@
 const productsService = require('../services/products.service');
-// const CustomError = require('../errors/CustomError');
 
 const productsController = {
   getProductById: async (req, res) => {
@@ -28,20 +27,12 @@ const productsController = {
     const { name } = req.body;
     const updatedProduct = await productsService.update(id, name);
 
-    // if (updatedProduct === false) {
-    //   throw new CustomError(404, 'Product not found');
-    // }
-
     res.status(200).json(updatedProduct);
   },
 
   delete: async (req, res) => {
     const { id } = req.params;
     await productsService.delete(id);
-
-    // if (deletedProduct === false) {
-    //   throw new CustomError(404, 'Product not found');
-    // }
     
     res.status(204).json();
   },

@@ -31,7 +31,6 @@ const salesController = {
   update: async (req, res) => {
     const { id } = req.params;
     const itemsToUpdate = req.body;
-    // console.log('itemsToUpdate', itemsToUpdate);
     const updatedSale = await salesService.update(id, itemsToUpdate);
 
     res.status(200).json(updatedSale);

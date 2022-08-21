@@ -1,4 +1,3 @@
-// const NotFoundError = require('../errors/NotFoundError');
 const CustomError = require('../errors/CustomError');
 const ProductsModel = require('../models/Products');
 
@@ -41,14 +40,7 @@ const productsService = {
 
   getProductsByName: async (name) => {
     const result = await ProductsModel.getProductsByName(name);
-    console.log('result', result);
-    // if (!result) {
-    //   const data = await ProductsModel.getAll();
-    //   console.log('data', data);
-    //   return data;
-    // }
-    const data = result;
-    return data;
+    return result;
   },
 };
 

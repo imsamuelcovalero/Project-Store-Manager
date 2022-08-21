@@ -4,19 +4,13 @@
     "colId": "c17b5666-7fc7-49f2-9a16-12d46200f44f",
     "containerId": "",
     "name": "projeto",
-    "url": "http://localhost:3000/products/search?q=alecrim",
+    "url": "http://localhost:3000/sales",
     "method": "GET",
     "sortNum": 10000,
     "created": "2022-08-11T18:46:53.021Z",
-    "modified": "2022-08-17T14:25:22.961Z",
+    "modified": "2022-08-18T15:41:12.339Z",
     "headers": [],
-    "params": [
-      {
-        "name": "q",
-        "value": "alecrim",
-        "isPath": false
-      }
-    ],
+    "params": [],
     "tests": []
   }
 ]
