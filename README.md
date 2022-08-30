@@ -1,6 +1,6 @@
 # Projetct Store Manager
 # Contexto
-Neste projeto foram realizados CRUDs em tabelas de produtos e vendas de uma loja no padrão de organização MSC.
+Neste projeto foram realizados CRUDs em tabelas de produtos e vendas de uma loja no padrão de organização MSC e REST.
 ## Técnologias usadas
 Back-end:
 > Desenvolvido usando: NodeJS, ExpressJS, Docker
